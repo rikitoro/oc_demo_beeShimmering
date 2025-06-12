@@ -8,7 +8,7 @@ ArrayList<Bond> bonds;
 
 void setup() {
   surface.setResizable(true);
-  surface.setSize((int)(NX + COS60 * NY) * d, (int) (SIN60 * NY + 1) * d);
+  surface.setSize((int) ((NX + COS60) * d), (int) (SIN60 * NY + 1) * d);
   
   // randomSeed(3141);
   
@@ -31,14 +31,26 @@ void setup() {
   bonds = new ArrayList<Bond>();
   for (int i = 0; i < NX; i++) {
     for (int j = 0; j < NY; j++) {
-      if (i + 1 < NX) {
-        bonds.add(new Bond(bees[i][j], bees[i + 1][j]));
-      }
-      if (j + 1 < NY) {
-        bonds.add(new Bond(bees[i][j], bees[i][j + 1]));
-      }
-      if (0 <= i - 1 && j + 1 < NY) {
-        bonds.add(new Bond(bees[i][j], bees[i - 1][j + 1]));
+      if (j % 2 == 0) { // j is even
+        if (i + 1 < NX) {
+          bonds.add(new Bond(bees[i][j], bees[i + 1][j]));
+        }
+        if (j + 1 < NY) {
+          bonds.add(new Bond(bees[i][j], bees[i][j + 1]));
+        }
+        if (0 <= i - 1 && j + 1 < NY) {
+          bonds.add(new Bond(bees[i][j], bees[i - 1][j + 1]));
+        }
+      } else { // j is odd
+        if (i + 1 < NX) {
+          bonds.add(new Bond(bees[i][j], bees[i + 1][j]));
+        }
+        if (j + 1 < NY) {
+          bonds.add(new Bond(bees[i][j], bees[i][j + 1]));
+        }
+        if (i + 1 < NX && j + 1 < NY) {
+          bonds.add(new Bond(bees[i][j], bees[i + 1][j + 1]));
+        }        
       }
     }
   }
@@ -95,7 +107,18 @@ void update() {
 void drawBee(int i, int j, Bee bee) {
   noStroke();
   fill(beeColor(bee));
-  circle((i + COS60 * j) * d + 0.5 * d, j * SIN60 * d + 0.5 * d, 0.7 * d);
+  
+  
+  float x;
+  if (j % 2 == 0) {
+    x = i * d + 0.5 * d;
+  } else {
+    x = (i + COS60) * d + 0.5 * d;
+  }
+
+  float y = j * SIN60 * d + 0.5 * d;
+
+  circle(x, y, 0.7 * d);
 }
 
 color beeColor(Bee bee) {
@@ -111,5 +134,16 @@ color beeColor(Bee bee) {
 void drawWasp(int i, int j) {
   noStroke();
   fill(color(0, 0, 0));
-  circle((i + COS60 * j) * d + 0.5 * d, j * SIN60 * d + 0.5 * d, 0.5 * d);
+  
+    float x;
+  if (j % 2 == 0) {
+    x = i * d + 0.5 * d;
+  } else {
+    x = (i + COS60) * d + 0.5 * d;
+  }
+
+  float y = j * SIN60 * d + 0.5 * d;
+
+  circle(x, y, 0.5 * d);
+  
 }
